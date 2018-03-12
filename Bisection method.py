@@ -1,9 +1,3 @@
-import math
-import numpy as np
-import matplotlib.mlab as mlab
-import matplotlib.pyplot as plt
-
-
 # Functions
 def function(x):
     return x ** 3 - (2 * x) + 3
