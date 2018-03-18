@@ -1,30 +1,35 @@
-# Functions
+import math
+
+
 def function(x):
     return x ** 3 - (2 * x) + 3
 
-#########################################
 
+########################################
 
-a = -2.5
-b = -1.5
+x0 = float(input("Enter the x0: "))
 
-c = (a + b) / 2.0
+x1 = float(input("Enter the x1: "))
 
-if (function(a) * function(c)) < 0.0:
-    b = c
-elif (function(c) * function(b)) < 0.0:
-    a = c
+e = str(input("Enter the epsilon (0.001): "))
 
-while True:
+buf = e.split('.')
+n = len(buf[1])
 
-    if abs(a - b) < 0.0001:
-        # if(abs(function(c)) == 0.0):
-        print("F(x) = " + str(c))
-        break
-    else:
-        c = (a + b) / 2.0
+e = float(e)
+x2 = 0.0
 
-        if (function(a) * function(c)) < 0.0:
-            b = c
-        elif (function(c) * function(b)) < 0.0:
-            a = c
+while function(x1) != 0.0:
+    buf = x2
+    x2 = x1 - function(x1) * (x0 - x1) / (function(x0) - function(x1))
+    x0 = x1
+    x1 = buf
+
+fx = x2
+
+if round(x2, n) > 0:
+    x2 = round(x2, n) + e
+elif round(x2, n) < 0:
+    x2 = round(x2, n) - e
+
+print("x: " + str(x2) + "\nF(x): " + str(function(fx)))
