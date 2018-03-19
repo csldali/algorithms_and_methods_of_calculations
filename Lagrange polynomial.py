@@ -42,8 +42,8 @@ print("-------------------------")
 print("|        Result         |")
 print("-------------------------")
 lagrangePlotData = {}
-for x in range(0, count + 2, 1):
-    lagrangePlotData[x] = lagrange(array_x, array_y_fx, x, count)
+for x in range(0, len(array_x), 1):
+    lagrangePlotData[array_x[x]] = lagrange(array_x, array_y_fx, array_x[x], count)
     print("|\tx = {0},\tF(x) = {1:.1f}\t|".format(x, lagrange(array_x, array_y_fx, x, count)))
 print("-------------------------")
 
@@ -60,9 +60,9 @@ plt.xlabel(u'Argument [x]')
 plt.ylabel(u'Function [f(x)]')
 
 plt.plot(mainPlotData.keys(), mainPlotData.values(), label=u'Main plot', color='b')
-plt.plot(mainPlotData_small_inc.keys(), mainPlotData_small_inc.values(), label=u'The Lagrange plot with inc. in 0.01',
-         color='c')
-plt.plot(lagrangePlotData.keys(), lagrangePlotData.values(), label=u'The Lagrange plot with inc. in 1', color='r')
+
+plt.plot(lagrangePlotData.keys(), lagrangePlotData.values(), label=u'The Lagrange plot with inc. in 1', color='r',
+         ls='--')
 plt.scatter(lagrangePlotData.keys(), lagrangePlotData.values(), label=u'Lagrange interpolation points:', color='g')
 
 for i in lagrangePlotData:
