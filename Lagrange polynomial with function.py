@@ -7,15 +7,18 @@ import math as math
 
 # The function of the algorithm for finding the Lagrange polynomial
 def lagrange(array_x_arguments, array_y_function, x_argument):
+    lagrange_plot = {}
     lagrange_x = 0.0
     p = 1.0
     for i in range(0, len(array_x_arguments), 1):
-        for j in range(0, len(array_x_arguments), 1):
+        for j in range(0, len(array_y_function), 1):
             if i != j:
                 p *= (x_argument - array_x_arguments[j]) / (array_x_arguments[i] - array_x_arguments[j])
         lagrange_x += p * array_y_function[i]
-        p = 1
-    return lagrange_x
+        lagrange_plot[array_y_function[i]] = lagrange_x
+        print(str(lagrange_plot[array_y_function[i]]) + "\t" + str(lagrange_x))
+        p = 1.0
+    return lagrange_plot
 
 
 # Counting of step for each point and the function
@@ -33,26 +36,32 @@ def func(a, b, n):
 ###########################the end of functions area################################################################
 
 
-mp_i = float(input("Enter first point of interval: ") or -3.14)
-p_i = float(input("Enter second point of interval: ") or 3.14)
+mp_i = float(input("Enter first point of interval: ") or -math.pi)
+p_i = float(input("Enter second point of interval: ") or math.pi)
 n = int(input("Enter n: ") or 10)
 
 func_plot = func(p_i, mp_i, n)
-lagrange_plot_arguments = []
+lagrange_plot_x = []
 lagrange_plot_y = []
 
 for key, value in func_plot.items():
-    lagrange_plot_arguments.append(key)
+    lagrange_plot_x.append(key)
     lagrange_plot_y.append(value)
+    # print(str(key) + "\t" + str(value))
 
-print(lagrange_plot_arguments)
-print(lagrange_plot_y)
+lagrange_plot = lagrange(lagrange_plot_x, lagrange_plot_y, )
 
+print("End")
+
+# print(lagrange_plot_arguments)
+# print(lagrange_plot_y)
+
+"""
 lagrange_plot = {}
 for i in func_plot:
     lagrange_plot[i] = lagrange(lagrange_plot_arguments,  lagrange_plot_y, i)
 
-
+"""
 # Plot construction
 fig = plt.gcf()
 fig.canvas.set_window_title('Plot construction')
@@ -62,8 +71,8 @@ plt.xlabel(u'Argument [x]')
 plt.ylabel(u'Function [f(x)]')
 
 plt.plot(func_plot.keys(), func_plot.values(), label=u'Main plot', color='b')
-#plt.plot(lagrange_plot.keys(), lagrange_plot.values(), label=u'The Lagrange plot with inc. in 0.01',
-     #    color='c')
+# plt.plot(lagrange_plot.keys(), lagrange_plot.values(), label=u'The Lagrange plot with inc. in 0.01',
+#        color='c', ls='--')
 """
 plt.plot(lagrangePlotData.keys(), lagrangePlotData.values(), label=u'The Lagrange plot with inc. in 1', color='r',
          ls='--')
