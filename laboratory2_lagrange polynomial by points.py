@@ -2,18 +2,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+#################################functions area#####################################################################
 # The function of the algorithm for finding the Lagrange polynomial
-def lagrange(array_x_arguments, array_y_function, x_argument, array_len):
+def lagrange(x, y, x_argument, n):
     lagrange_x = 0.0
     p = 1.0
-    for i in range(0, array_len, 1):
-        for j in range(0, array_len, 1):
+    for i in range(0, n, 1):
+        for j in range(0, n, 1):
             if i != j:
-                p *= (x_argument - array_x_arguments[j]) / (array_x_arguments[i] - array_x_arguments[j])
-        lagrange_x += p * array_y_function[i]
+                p *= (x_argument - x[j]) / (x[i] - x[j])
+        lagrange_x += p * y[i]
         p = 1
     return lagrange_x
 
+
+###########################the end of functions area################################################################
 
 while True:
     count = int(input("Enter the count of elements (by default: i = 4): ") or 4)
