@@ -2,7 +2,7 @@ import math
 
 
 def function(x):
-    return x ** 3 - (2 * x) + 3
+    return (1 / (x + 1)) - math.log10(x)
 
 
 ########################################
