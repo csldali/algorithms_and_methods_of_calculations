@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math as math
+from scipy.misc import derivative
+import sympy
 
 
 #################################functions area#####################################################################
@@ -23,7 +25,8 @@ def math_function(x):
 
 
 def math_function1(x):
-    return np.diff(x)
+    return -((math.sin(x)) / (1 + (math.cos(x) ** 2))) + (
+            (2 * math.sin(x) * (math.cos(x) ** 2)) / (((math.cos(x) ** 2) + 1) ** 2))
 
 
 # Counting of step for each point and the function
@@ -64,18 +67,40 @@ n = 5
 
 func_plot_small_inc = main_plot(a, b, n)
 func_plot_int_inc = get_points(a, b, n)
+
 plot_x = []
 plot_y = []
+
+derivative_plot_x = []
+derivative_plot_y = []
 
 for key, value in func_plot_int_inc.items():
     plot_x.append(key)
     plot_y.append(value)
 
+for i in plot_y:
+    print(str(i))
+
+derivative_plot_x.append(plot_x[0])
+derivative_plot_y.append(derivative(math_function, plot_x[0]))
+print("\nin 0:\t" + str(derivative(math_function, plot_x[0])))
+
+derivative_plot_x.append(plot_x[2])
+derivative_plot_y.append(derivative(math_function, plot_x[2]))
+print("in 2:\t" + str(derivative(math_function, plot_x[2])))
+
+derivative_plot_x.append(plot_x[1])
+derivative_plot_y.append(derivative(math_function, plot_x[1]))
+print(str(derivative(math_function, plot_x[1])))
+
+derivative_plot_x.append(plot_x[1])
+derivative_plot_y.append(derivative(math_function, plot_x[1]))
+print("in 1:\t" + str(derivative(math_function1, plot_x[1])))
+
 lagrange_plot = {}
 
 for i in np.arange(0, n + 0.01, 0.01):
     lagrange_plot[correct_index(a, b, n, i)] = lagrange(plot_x, plot_y, correct_index(a, b, n, i), n)
-
 
 print()
 
@@ -86,6 +111,16 @@ plt.grid(True)
 plt.title(u'Plots')
 plt.xlabel(u'Argument [x]')
 plt.ylabel(u'Function [f(x)]')
+
+plt.scatter(derivative_plot_x, derivative_plot_y, label=u'derivate', color='b')
+
+derivative_plot_x.clear()
+derivative_plot_y.clear()
+for i in np.arange(-6.5, 6.5 + 1, 0.1):
+    derivative_plot_x.append(i)
+    derivative_plot_y.append(derivative(math_function, i))
+
+plt.plot(derivative_plot_x, derivative_plot_y, label=u'derivate', color='c')
 
 plt.plot(func_plot_small_inc.keys(), func_plot_small_inc.values(), label=u'Main plot with inc. in 0.01', color='k')
 plt.plot(func_plot_int_inc.keys(), func_plot_int_inc.values(), label=u'Main plot with inc. in 1', color='m')
