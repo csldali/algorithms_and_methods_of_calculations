@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math as math
-from scipy.misc import derivative
-import sympy
 
 
 #################################functions area#####################################################################
@@ -22,11 +20,6 @@ def lagrange(x, y, x_argument, n):
 # The function given by task
 def math_function(x):
     return math.cos(x) / (1 + (math.cos(x) ** 2))
-
-
-def math_function1(x):
-    return -((math.sin(x)) / (1 + (math.cos(x) ** 2))) + (
-            (2 * math.sin(x) * (math.cos(x) ** 2)) / (((math.cos(x) ** 2) + 1) ** 2))
 
 
 # Counting of step for each point and the function
@@ -53,13 +46,34 @@ def main_plot(lower_limit, upper_limit, n):
     return list_of_points
 
 
-# значение ф-ции == значению производной этой фунции
-# The function of the algorithm for finding the Lagrange polynomial
-def ermit(x):
-    return 0
+# The function of the algorithm for finding the Hermite polynomial
+from pylab import *
 
+
+def hermite(n, x):
+    if n == 0:
+        return ones_like(x) * pi ** (-0.25) * exp(-x ** 2 / 2)
+
+    if n == 1:
+        return sqrt(2.) * x * norm * pi ** (-0.25) * exp(-x ** 2 / 2)
+
+    h_i_2 = ones_like(x) * pi ** (-0.25)
+    h_i_1 = sqrt(2.) * x * pi ** (-0.25)
+    sum_log_scale = zeros_like(x)
+    h_i = 0.
+    for i in range(2, n + 1):
+        h_i = sqrt(2. / i) * x * h_i_1 - sqrt((i - 1.) / i) * h_i_2
+        h_i_2, h_i_1 = h_i_1, h_i
+        log_scale = log(abs(h_i)).round()
+        scale = exp(-log_scale)
+        h_i = h_i * scale
+        h_i_1 = h_i_1 * scale
+        h_i_2 = h_i_2 * scale
+        sum_log_scale += log_scale
+    return h_i * exp((-x ** 2) / 2 + sum_log_scale)
 
 ###########################the end of functions area################################################################
+
 
 a = -math.pi * 2
 b = math.pi * 2
@@ -67,42 +81,21 @@ n = 5
 
 func_plot_small_inc = main_plot(a, b, n)
 func_plot_int_inc = get_points(a, b, n)
-
 plot_x = []
 plot_y = []
-
-derivative_plot_x = []
-derivative_plot_y = []
+hermite_plot = {}
 
 for key, value in func_plot_int_inc.items():
     plot_x.append(key)
     plot_y.append(value)
-
-for i in plot_y:
-    print(str(i))
-
-derivative_plot_x.append(plot_x[0])
-derivative_plot_y.append(derivative(math_function, plot_x[0]))
-print("\nin 0:\t" + str(derivative(math_function, plot_x[0])))
-
-derivative_plot_x.append(plot_x[2])
-derivative_plot_y.append(derivative(math_function, plot_x[2]))
-print("in 2:\t" + str(derivative(math_function, plot_x[2])))
-
-derivative_plot_x.append(plot_x[1])
-derivative_plot_y.append(derivative(math_function, plot_x[1]))
-print(str(derivative(math_function, plot_x[1])))
-
-derivative_plot_x.append(plot_x[1])
-derivative_plot_y.append(derivative(math_function, plot_x[1]))
-print("in 1:\t" + str(derivative(math_function1, plot_x[1])))
 
 lagrange_plot = {}
 
 for i in np.arange(0, n + 0.01, 0.01):
     lagrange_plot[correct_index(a, b, n, i)] = lagrange(plot_x, plot_y, correct_index(a, b, n, i), n)
 
-print()
+for i in np.arange(0, n + 0.01, 0.01):
+    hermite_plot[correct_index(a, b, n, i)] = hermite(n, math_function(correct_index(a, b, n, i)))
 
 # Plot construction
 fig = plt.gcf()
@@ -112,22 +105,11 @@ plt.title(u'Plots')
 plt.xlabel(u'Argument [x]')
 plt.ylabel(u'Function [f(x)]')
 
-plt.scatter(derivative_plot_x, derivative_plot_y, label=u'derivate', color='b')
-
-derivative_plot_x.clear()
-derivative_plot_y.clear()
-for i in np.arange(-6.5, 6.5 + 1, 0.1):
-    derivative_plot_x.append(i)
-    derivative_plot_y.append(derivative(math_function, i))
-
-plt.plot(derivative_plot_x, derivative_plot_y, label=u'derivate', color='c')
-
 plt.plot(func_plot_small_inc.keys(), func_plot_small_inc.values(), label=u'Main plot with inc. in 0.01', color='k')
 plt.plot(func_plot_int_inc.keys(), func_plot_int_inc.values(), label=u'Main plot with inc. in 1', color='m')
 
 plt.plot(lagrange_plot.keys(), lagrange_plot.values(), label=u'The Lagrange plot with inc. in 0.01',
-         color='g', ls="--")
-
+         color='r', ls="--")
 lagrange_plot.clear()
 for i in np.arange(0, n + 1, 1):
     lagrange_plot[correct_index(a, b, n, i)] = lagrange(plot_x, plot_y, correct_index(a, b, n, i), n)
@@ -135,6 +117,14 @@ for i in np.arange(0, n + 1, 1):
 for i in lagrange_plot:
     plt.scatter(lagrange_plot.keys(), lagrange_plot.values(),
                 label=u"x = " + str(round(i, 2)) + " f(x) = " + str(round(lagrange_plot[i], 2)), color='r')
+
+plt.plot(hermite_plot.keys(), hermite_plot.values(), label=u'The Hermite plot', color='b', ls=":")
+hermite_plot.clear()
+for i in np.arange(0, n + 1, 1):
+    hermite_plot[correct_index(a, b, n, i)] = hermite(n, math_function(correct_index(a, b, n, i)))
+for i in hermite_plot:
+    plt.scatter(hermite_plot.keys(), hermite_plot.values(),
+                label=u"x = " + str(round(i, 2)) + " f(x) = " + str(round(hermite_plot[i], 2)), color='b')
 
 plt.legend()
 plt.show()
