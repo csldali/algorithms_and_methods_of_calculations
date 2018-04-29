@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import sympy
 
 
 #################################functions area#####################################################################
@@ -72,6 +73,19 @@ def hermite(n, x):
         sum_log_scale += log_scale
     return h_i * exp((-x ** 2) / 2 + sum_log_scale)
 
+
+def f(x):
+    return cos(x) / (1 + (cos(x) ** 2))
+
+
+def f1(x):
+    return sin(x) * ((cos(x) ** 2) - 1) * (((cos(x) ** 2) + 1) ** -2)
+
+
+def f2(x):
+    return cos(x) * (((cos(x) ** 2) + 1) ** -3) * (2 * cos(x) ** 2 * sin(x) ** 2 - 6 * sin(x) ** 2 + cos(x) ** 4 - 1)
+
+
 ###########################the end of functions area################################################################
 
 
@@ -125,6 +139,33 @@ for i in np.arange(0, n + 1, 1):
 for i in hermite_plot:
     plt.scatter(hermite_plot.keys(), hermite_plot.values(),
                 label=u"x = " + str(round(i, 2)) + " f(x) = " + str(round(hermite_plot[i], 2)), color='b')
+
+y0 = []
+y1 = []
+y2 = []
+for i in range(0, len(plot_x)):
+    for j in range(0, 3):
+        if j == 0:
+            y0.append(f(plot_x[i]))
+        elif j == 1:
+            y1.append(f1(plot_x[i]) / 2)
+        elif j == 2:
+            y2.append(f2(plot_x[i]) / 6)
+        else:
+            break
+
+for i in y0:
+    print(i)
+# plt.plot(func_plot_int_inc.keys(), y0, label=u'y', color='g')
+print("------------")
+
+for i in y1:
+    print(i)
+plt.plot(func_plot_int_inc.keys(), y1, label=u'y', color='g')
+print("------------")
+for i in y2:
+    print(i)
+plt.plot(func_plot_int_inc.keys(), y2, label=u'y', color='g')
 
 plt.legend()
 plt.show()
