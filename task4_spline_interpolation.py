@@ -92,4 +92,4 @@ plt.plot(XX, S3, color='green', ls='--')
 plt.scatter(X, F, marker='o', label=u'spline interpolation', color='red')
 
 plt.legend()
-# plt.show()
+plt.show()

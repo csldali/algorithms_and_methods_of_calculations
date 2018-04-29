@@ -75,7 +75,7 @@ def hermite(n, x):
 
 
 def f(x):
-    return cos(x) / (1 + (cos(x) ** 2))
+    return math.cos(x) / (1 + (math.cos(x) ** 2))
 
 
 def f1(x):
@@ -89,9 +89,15 @@ def f2(x):
 ###########################the end of functions area################################################################
 
 
-a = -math.pi * 2
-b = math.pi * 2
+a = -math.pi
+b = math.pi
 n = 5
+
+print(f(-math.pi*2))
+print(f(0))
+print(f(math.pi*2))
+
+print("--------------------------------------------")
 
 func_plot_small_inc = main_plot(a, b, n)
 func_plot_int_inc = get_points(a, b, n)
@@ -131,15 +137,15 @@ for i in np.arange(0, n + 1, 1):
 for i in lagrange_plot:
     plt.scatter(lagrange_plot.keys(), lagrange_plot.values(),
                 label=u"x = " + str(round(i, 2)) + " f(x) = " + str(round(lagrange_plot[i], 2)), color='r')
-
+"""
 plt.plot(hermite_plot.keys(), hermite_plot.values(), label=u'The Hermite plot', color='b', ls=":")
 hermite_plot.clear()
 for i in np.arange(0, n + 1, 1):
     hermite_plot[correct_index(a, b, n, i)] = hermite(n, math_function(correct_index(a, b, n, i)))
 for i in hermite_plot:
     plt.scatter(hermite_plot.keys(), hermite_plot.values(),
-                label=u"x = " + str(round(i, 2)) + " f(x) = " + str(round(hermite_plot[i], 2)), color='b')
-
+               label=u"x = " + str(round(i, 2)) + " f(x) = " + str(round(hermite_plot[i], 2)), color='b')
+"""
 y0 = []
 y1 = []
 y2 = []
@@ -153,19 +159,6 @@ for i in range(0, len(plot_x)):
             y2.append(f2(plot_x[i]) / 6)
         else:
             break
-
-for i in y0:
-    print(i)
-# plt.plot(func_plot_int_inc.keys(), y0, label=u'y', color='g')
-print("------------")
-
-for i in y1:
-    print(i)
-plt.plot(func_plot_int_inc.keys(), y1, label=u'y', color='g')
-print("------------")
-for i in y2:
-    print(i)
-plt.plot(func_plot_int_inc.keys(), y2, label=u'y', color='g')
 
 plt.legend()
 plt.show()
