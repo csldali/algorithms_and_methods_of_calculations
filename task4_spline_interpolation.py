@@ -1,6 +1,7 @@
 import numpy as np
 import sympy as sym
 import matplotlib.pyplot as plt
+import math
 
 
 def Spline3GI(X, F, a0, b0):
@@ -14,10 +15,10 @@ def Spline3GI(X, F, a0, b0):
         Ff[i] = (6 * (F[i] - 2 * F[i + 1] + F[i + 2])) / h / h
     c = np.zeros((n + 1,))
     c[1:n] = np.linalg.solve(A, Ff)  # решить СЛАУ методом прогонки!
-    print(type(c))
-    print(A)
-    print(Ff)
-    print(np.linalg.solve(A, Ff))
+    # print(type(c))
+    # print(A)
+    # print("F(x)" + str(Ff))
+    # print("Correct result\n" + str(np.linalg.solve(A, Ff)))
     d = np.zeros((n,))
     b = np.zeros((n,))
     S = n * [0]
@@ -28,42 +29,71 @@ def Spline3GI(X, F, a0, b0):
     return S
 
 
+def cubic_interpolation(x0, x, y):
+    x = np.asfarray(x)
+    y = np.asfarray(y)
+    # check if sorted
+    if np.any(np.diff(x) < 0):
+        indexes = np.argsort(x)
+        x = x[indexes]
+        y = y[indexes]
+
+    size = len(x)
+
+    xdiff = np.diff(x)
+    ydiff = np.diff(y)
+
+    # allocate buffer matrices
+    Li = np.empty(size)
+    Li_1 = np.empty(size - 1)
+    z = np.empty(size)
+
+    # fill diagonals Li and Li-1 and solve [L][y] = [B]
+    Li[0] = math.sqrt(2 * xdiff[0])
+    Li_1[0] = 0.0
+    B0 = 0.0  # natural boundary
+    z[0] = B0 / Li[0]
+
+    for i in range(1, size - 1, 1):
+        Li_1[i] = xdiff[i - 1] / Li[i - 1]
+        Li[i] = math.sqrt(2 * (xdiff[i - 1] + xdiff[i]) - Li_1[i - 1] * Li_1[i - 1])
+        Bi = 6 * (ydiff[i] / xdiff[i] - ydiff[i - 1] / xdiff[i - 1])
+        z[i] = (Bi - Li_1[i - 1] * z[i - 1]) / Li[i]
+
+    i = size - 1
+    Li_1[i - 1] = xdiff[-1] / Li[i - 1]
+    Li[i] = math.sqrt(2 * xdiff[-1] - Li_1[i - 1] * Li_1[i - 1])
+    Bi = 0.0  # natural boundary
+    z[i] = (Bi - Li_1[i - 1] * z[i - 1]) / Li[i]
+
+    # solve [L.T][x] = [y]
+    i = size - 1
+    z[i] = z[i] / Li[i]
+
+    for i in range(size - 2, -1, -1):
+        z[i] = (z[i] - Li_1[i - 1] * z[i + 1]) / Li[i]
+
+    # find index
+    index = x.searchsorted(x0)
+    np.clip(index, 1, size - 1, index)
+
+    xi1, xi0 = x[index], x[index - 1]
+    yi1, yi0 = y[index], y[index - 1]
+    zi1, zi0 = z[index], z[index - 1]
+    hi1 = xi1 - xi0
+
+    # calculate cubic
+    f0 = zi0 / (6 * hi1) * (xi1 - x0) ** 3 + \
+         zi1 / (6 * hi1) * (x0 - xi0) ** 3 + \
+         (yi1 / hi1 - zi1 * hi1 / 6) * (x0 - xi0) + \
+         (yi0 / hi1 - zi0 * hi1 / 6) * (xi1 - x0)
+
+    return f0
+
+
 def f(x):
     return x * np.sin(x)
 
-
-def TDMAsolver(a, b, c, d):
-    '''
-    TDMA solver, a b c d can be NumPy array type or Python list type.
-    refer to http://en.wikipedia.org/wiki/Tridiagonal_matrix_algorithm
-    and to http://www.cfd-online.com/Wiki/Tridiagonal_matrix_algorithm_-_TDMA_(Thomas_algorithm)
-    '''
-    nf = len(d)  # number of equations
-    ac, bc, cc, dc = map(np.array, (a, b, c, d))  # copy arrays
-    for it in range(1, nf):
-        mc = ac[it - 1] / bc[it - 1]
-        bc[it] = bc[it] - mc * cc[it - 1]
-        dc[it] = dc[it] - mc * dc[it - 1]
-
-    xc = bc
-    xc[-1] = dc[-1] / bc[-1]
-
-    for il in range(nf - 2, -1, -1):
-        xc[il] = (dc[il] - cc[il] * xc[il + 1]) / bc[il]
-
-    return xc
-
-
-a = np.array([4., 1., 0.])
-b = np.array([1., 4., 1.])
-c = np.array([0., 1., 4.])
-d = np.array([-2.72837045, 3.27404454, -2.72837045])
-
-print("Test results:")
-
-print(TDMAsolver(a, b, c, d))
-
-print("end Test results:")
 
 a = -np.pi
 b = np.pi
@@ -87,9 +117,13 @@ plt.grid(True)
 plt.title(u'Plots')
 plt.xlabel(u'Argument [x]')
 plt.ylabel(u'Function [f(x)]')
-plt.plot(XX, f(XX), color='blue')
+plt.plot(XX, f(XX), color='blue', label=u'Initial plot: f(x) = x * sin(x)')
 plt.plot(XX, S3, color='green', ls='--')
-plt.scatter(X, F, marker='o', label=u'spline interpolation', color='red')
-
+plt.scatter(X, F, marker='o', label=u'Spline3GI - spline interpolation', color='red')
+x_new = np.linspace(a, b, num=n)
+# plt.scatter(X, cubic_interpolation(x_new, X, F), marker='o', label=u'cubic_interpolation - spline interpolation',
+# color='k')
+plt.plot(X, cubic_interpolation(x_new, X, F), ls='--',  label=u'cubic_interpolation - spline interpolation',
+         color='k')
 plt.legend()
 plt.show()

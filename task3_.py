@@ -1,0 +1,13 @@
+n = len(x)
+s = sum(y)
+s1 = sum([1 / x[i] for i in range(0, n)])
+s2 = sum([(1 / x[i]) ** 2 for i in range(0, n)])
+s3 = sum([y[i] / x[i] for i in range(0, n)])
+a = round((s * s2 - s1 * s3) / (n * s2 - s1 ** 2), 3)
+b = round((n * s3 - s1 * s) / (n * s2 - s1 ** 2), 3)
+s4 = [a + b / x[i] for i in range(0, n)]
+so = round(sum([abs(y[i] - s4[i]) for i in range(0, n)]) / (n * sum(y)) * 100, 3)
+plt.plot(x, y, color='b', marker='x')
+plt.plot(x, s4, color='r', linewidth=2)
+plt.grid(True)
+plt.show()
