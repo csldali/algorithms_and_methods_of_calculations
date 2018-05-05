@@ -123,7 +123,7 @@ plt.scatter(X, F, marker='o', label=u'Spline3GI - spline interpolation', color='
 x_new = np.linspace(a, b, num=n + 1)
 # plt.scatter(X, cubic_interpolation(x_new, X, F), marker='o', label=u'cubic_interpolation - spline interpolation',
 # color = 'k')
-plt.plot(X, cubic_interpolation(x_new, X, F), ls='--', label=u'cubic_interpolation - spline interpolation',
+plt.plot(X, cubic_interpolation(x_new, X, F), ls='--', label=u'Tridiagonal matrix algorithm - spline interpolation',
          color='k')
 plt.legend()
 plt.show()
