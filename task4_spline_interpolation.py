@@ -100,7 +100,7 @@ b = np.pi
 x = sym.Symbol('x')
 n = 5
 h = (b - a) / n
-X = np.linspace(a, b, num=n)
+X = np.linspace(a, b, num=n + 1)
 F = f(X)
 S = Spline3GI(X, F, a, b)
 XX = np.linspace(a, b)
@@ -120,10 +120,10 @@ plt.ylabel(u'Function [f(x)]')
 plt.plot(XX, f(XX), color='blue', label=u'Initial plot: f(x) = x * sin(x)')
 plt.plot(XX, S3, color='green', ls='--')
 plt.scatter(X, F, marker='o', label=u'Spline3GI - spline interpolation', color='red')
-x_new = np.linspace(a, b, num=n)
+x_new = np.linspace(a, b, num=n + 1)
 # plt.scatter(X, cubic_interpolation(x_new, X, F), marker='o', label=u'cubic_interpolation - spline interpolation',
-# color='k')
-plt.plot(X, cubic_interpolation(x_new, X, F), ls='--',  label=u'cubic_interpolation - spline interpolation',
+# color = 'k')
+plt.plot(X, cubic_interpolation(x_new, X, F), ls='--', label=u'cubic_interpolation - spline interpolation',
          color='k')
 plt.legend()
 plt.show()
