@@ -18,17 +18,26 @@ def lagrange(x, y, x_argument, n):
     return lagrange_x
 
 
-# The function given by task
-def math_function(x):
+
+def f(x):
     return math.cos(x) / (1 + (math.cos(x) ** 2))
 
 
-# Counting of step for each point and the function
+def f1(x):
+    return sin(x) * ((cos(x) ** 2) - 1) * (((cos(x) ** 2) + 1) ** -2)
+
+
+def f2(x):
+    return cos(x) * (((cos(x) ** 2) + 1) ** -3) * (2 * cos(x) ** 2 * sin(x) ** 2 - 6 * sin(x) ** 2 + cos(x) ** 4 - 1)
+
+
+
+# Counting of step for each point and the functionf
 def get_points(lower_limit, upper_limit, n):
     list_of_points = {}
     h = (upper_limit - lower_limit) / n
     for i in np.arange(0, n + 1, 1):
-        list_of_points[lower_limit + i * h] = math_function(lower_limit + i * h)
+        list_of_points[lower_limit + i * h] = f(lower_limit + i * h)
     return list_of_points
 
 
@@ -43,24 +52,14 @@ def main_plot(lower_limit, upper_limit, n):
     list_of_points = {}
     h = (upper_limit - lower_limit) / n
     for i in np.arange(0, n + 0.01, 0.01):
-        list_of_points[lower_limit + i * h] = math_function(lower_limit + i * h)
+        list_of_points[lower_limit + i * h] = f(lower_limit + i * h)
     return list_of_points
 
 
 
-def f(x):
-    return math.cos(x) / (1 + (math.cos(x) ** 2))
 
 
-def f1(x):
-    return sin(x) * ((cos(x) ** 2) - 1) * (((cos(x) ** 2) + 1) ** -2)
-
-
-def f2(x):
-    return cos(x) * (((cos(x) ** 2) + 1) ** -3) * (2 * cos(x) ** 2 * sin(x) ** 2 - 6 * sin(x) ** 2 + cos(x) ** 4 - 1)
-
-
-def divided_differences(x_array, y_array):
+def divided_differences_hermite(x_array, y_array):
     y_array_buf = []
     delta = 1
     print("|------------------")
@@ -151,7 +150,7 @@ plt.plot(lagrange_plot.keys(), lagrange_plot.values(), label=u'The Lagrange plot
 x = [-math.pi, 0, 0, 0, math.pi]
 y = [-0.5, 0.5, 0.5, 0.5, -0.5]
 
-divided_differences(x, y)
+divided_differences_hermite(x, y)
 plt.plot(hermite_plot.keys(), hermite_plot.values(), label=u'The Hermite plot', color='m')
 
 lagrange_plot.clear()
