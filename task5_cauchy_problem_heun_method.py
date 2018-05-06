@@ -3,11 +3,9 @@ import matplotlib.pyplot as plt
 import math
 import scipy.integrate
 
-
 # The function given by task
 def f(x, y):
     return x * y + math.e ** (0.1 * x)
-
 
 # The Heun method
 def heun_method_solver(f, x, h, start_points):
@@ -18,7 +16,6 @@ def heun_method_solver(f, x, h, start_points):
         f2 = f(x[i - 1] + (2.0 / 3.0) * h, y[i - 1] + (2.0 / 3.0) * h * f1)
         y[i] = y[i - 1] + h * (f1 + 3.0 * f2) / 4.0
     return y
-
 
 x0 = 0
 y0 = 1
