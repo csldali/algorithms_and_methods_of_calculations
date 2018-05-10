@@ -170,5 +170,5 @@ for i in lagrange_plot:
     plt.scatter(lagrange_plot.keys(), lagrange_plot.values(),
                 label=u"Hermite x = " + str(round(i, 2)) + " f(x) = " + str(round(lagrange_plot[i], 2)), color='m')
 
-plt.legend()
+plt.legend(shadow=True)
 plt.show()
