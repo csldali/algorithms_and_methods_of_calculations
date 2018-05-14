@@ -4,10 +4,14 @@ from scipy import integrate
 
 
 def f(x):
-    return (x * mpmath.coth(x)) / ((x ** 3) + 2 * x + 1)
+    # return (x * mpmath.coth(x)) / ((x ** 3) + 2 * x + 1)
+    # return 3
+    return x
 
 
-func = lambda x: (x * mpmath.coth(x)) / ((x ** 3) + 2 * x + 1)
+# func = lambda x: (x * mpmath.coth(x)) / ((x ** 3) + 2 * x + 1)
+# func = lambda x: 3
+func = lambda x: x
 
 
 def trapezoidal_formula(a, b, n):
@@ -16,14 +20,13 @@ def trapezoidal_formula(a, b, n):
     x = []
     for i in numpy.arange(a, b + h / 2, h):
         x.append(i)
-    res = f(x[0])
-    # for i in range(0, n):
+    y = []
+    y.append(f(x[0]))
     for i in range(1, n):
-        # res = res + (f(1 + h * i) + f(1 + h * (1 + i)))
-        res = res + (2 * f(x[i]))
-    # res = (h / 2) * res
-    res = res * ((b - a) / (2 * n))
-    print("trapezoidal_formula for n =", n, ":\t", round(res, 6))
+        y.append((2 * f(x[i])))
+    y.append(f(x[n]))
+    res = sum(y) * ((b - a) / (2 * n))
+    print("trapezoidal_formula for n =", n, ":\t", res)
 
 
 def left_rectangles(a, b, n):
@@ -32,15 +35,14 @@ def left_rectangles(a, b, n):
     x = []
     for i in numpy.arange(a, b + h / 2, h):
         x.append(i)
-    res = 0
-    for i in range(0, n - 1):
-        res = res + f(x[i])
-    res = h * res
-    print("left_rectangles for n =", n, ":\t", round(res, 6))
+    y = []
+    for i in range(0, n):
+        y.append(f(x[i]))
+    res = h * sum(y)
+    print("left_rectangles for n =", n, ":\t", res, 6)
 
 
 if __name__ == '__main__':
-
     a = 1
     b = 2
     trapezoidal_formula(a, b, 3)

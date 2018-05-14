@@ -15,24 +15,31 @@ def g(x, A, B):
 h = (1 / 8)
 n = 13
 
-x_array = numpy.zeros((9,))
-y_array = numpy.zeros((9,))
+x_array = numpy.zeros((8,))
+y_array = numpy.zeros((8,))
 
 f_initial_plot = {}
 x = 1
-for i in range(0, 9):
+for i in range(0, 8):
     x_array[i] = x
-    y_array[i] = f(x, n, i)
+    y_array[i] = numpy.log(f(x, n, i)) - numpy.log(x)
+
     f_initial_plot[x] = f(x, n, i)
     x = x + h
 
-M = x_array[:, np.newaxis] ** [0, 1]
+M = ones((8, 2))
+M[:, 0] = -x_array
+print(len(M))
+print(M)
 p, res, rnk, s = lstsq(M, y_array)
+print(lstsq(M, y_array))
+A = math.e ** p[1]
 
+B = p[0]
 g_plot = {}
 x = 1
-for i in range(0, 9):
-    g_plot[x] = g(x, (n % 4), (n % 5))
+for i in range(0, 8):
+    g_plot[x] = g(x, A, B)
     x = x + h
 
 fig = plt.gcf()
