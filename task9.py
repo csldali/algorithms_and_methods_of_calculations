@@ -3,7 +3,7 @@ import numpy
 import scipy.linalg
 
 
-def triangular_matrix(array):
+def gause_triangular_matrix(array):
     n = len(array)
     for i in range(0, n - 1):
         for j in range(i + 1, n):
@@ -13,7 +13,7 @@ def triangular_matrix(array):
     return array
 
 
-def detSolve(array):
+def gause_det_solve(array):
     n = len(array)
     det = numpy.zeros(n)
     for i in range(n - 1, -1, -1):
@@ -27,29 +27,11 @@ def detSolve(array):
 def lu_decomposition(A):
     n = len(A)
     """
-    for i in range(1, n + 1):
-        for j in range(i, n - 1):
-            buf_sum = 0
-            for k in range(0, i - 1):
-                buf_sum += L[i][k] * U[k][j]
-            U[i][j] = A[i][j] - buf_sum
-
-    for i in range(1, n + 1):
-        for j in range(i, n - 1):
-            buf_sum = 0
-            for k in range(0, i - 1):
-                buf_sum += L[j][k] * U[k][i]
-            L[j][i] = (A[j][i] - buf_sum) / U[i][i]
-
-    """
-
-    """
     for j in range(0, n):
         U[0][j] = A[0][j]
         if U[0][0] != 0:
             L[j][0] = A[j][0] / U[0][0]
     """
-
     for i in range(1, n):
         buf_sum = 0.
         for j in range(i, n - 1):
@@ -91,9 +73,9 @@ if __name__ == '__main__':
     print("\noriginal matrix:")
     pprint.pprint(system)
     print("\ntriangular matrix:")
-    system = triangular_matrix(system)
+    system = gause_triangular_matrix(system)
     pprint.pprint(system)
     print("\nthe roots:")
-    det = detSolve(system)
+    det = gause_det_solve(system)
     for x in det: print(x)
     print("-------------------- end Gauss Method -----------------------")

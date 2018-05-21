@@ -36,10 +36,8 @@ def power_iteration(A, e):
         ev_new = eigenvalue(A, v_new)
         if numpy.abs(ev - ev_new) < e:
             break
-
         v = v_new
         ev = ev_new
-
     return ev_new, v_new
 
 
@@ -52,6 +50,7 @@ def find_max_by_abs(lst):
                 lesser_elements_count += 1
         if lesser_elements_count == len(elements) - 1:
             return elem
+
 
 
 if __name__ == '__main__':
