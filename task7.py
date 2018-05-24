@@ -1,7 +1,5 @@
 import pprint
-
 import numpy
-
 
 def create_the_matrix():
     n = 10
@@ -18,29 +16,6 @@ def create_the_matrix():
         array[i + 1][i + 1] = -array[i][i]
     return array
 
-
-def eigenvalue(A, v):
-    Av = A.dot(v)
-    return v.dot(Av)
-
-
-def power_iteration(A, e):
-    n, d = A.shape
-    v = numpy.ones(d) / numpy.sqrt(d)
-    ev = eigenvalue(A, v)
-
-    while True:
-        Av = A.dot(v)
-        v_new = Av / numpy.linalg.norm(Av)
-
-        ev_new = eigenvalue(A, v_new)
-        if numpy.abs(ev - ev_new) < e:
-            break
-        v = v_new
-        ev = ev_new
-    return ev_new, v_new
-
-
 def find_max_by_abs(lst):
     elements = set(lst)
     for elem in elements:
@@ -50,6 +25,26 @@ def find_max_by_abs(lst):
                 lesser_elements_count += 1
         if lesser_elements_count == len(elements) - 1:
             return elem
+
+def eigenvalue(A, v):
+    Av = A.dot(v)
+    return v.dot(Av)
+
+def power_iteration(A, e):
+    n, d = A.shape
+    v = numpy.ones(d) / numpy.sqrt(d)
+    ev = eigenvalue(A, v)
+
+    while True:
+        Av = A.dot(v)
+        v_new = Av / numpy.linalg.norm(Av)
+        ev_new = eigenvalue(A, v_new)
+        if numpy.abs(ev - ev_new) < e:
+            break
+        v = v_new
+        ev = ev_new
+    return ev_new, v_new
+
 
 
 
