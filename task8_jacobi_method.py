@@ -35,7 +35,7 @@ def create_the_matrix():
 
 def jacobi(A, e):  # Jacobi method
 
-    def maxElem(A):  # Find largest off-diag. element a[k,l]
+    def maxElem(A):  # Find largest off-diag. element a[p,q]
         n = len(A)
         max_a = 0
         p = 0
@@ -48,7 +48,7 @@ def jacobi(A, e):  # Jacobi method
                     q = j
         return max_a, p, q
 
-    def rotate(A, p, q):  # Rotate to make a[k,l] = 0
+    def rotate(A, p, q):  # Rotate to make a[p,q] = 0
         aDiff = A[q, q] - A[p, p]
         if abs(A[p, q]) < abs(aDiff) * e:
             t = aDiff / (2 * A[p, q])

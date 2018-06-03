@@ -4,6 +4,7 @@ from numpy import array, identity, diagonal
 from math import sqrt
 import numpy
 
+"""
 
 def jacobi(a, tol=1.0e-10):  # Jacobi method
 
@@ -101,7 +102,6 @@ pprint.pprint(jacobi(array))
 w, _ = numpy.linalg.eig(array)
 pprint.pprint(w)
 
-"""
        for i in range(p):  # Case of i < p
            temp = A[i, p]
            A[i, p] = temp - s * (A[i, q] + tau * temp)
@@ -121,4 +121,34 @@ pprint.pprint(w)
            temp = B[i, p]
            B[i, p] = temp - s * (B[i, q] + tau * B[i, p])
            B[i, q] = B[i, q] + s * (temp - tau * B[i, q])
-       """
+
+"""
+
+import scipy
+
+
+def gauss_seidel(A, e):
+    n = len(A)
+    x0 = [0] * n
+    x1 = x0[:]
+    while True:
+        for i in range(n):
+            s = sum(-A[i][j] * x1[j] for j in range(n) if i != j)
+            x1[i] = round((A[i][n] + s) / A[i][i], 3)
+        if all(abs(x1[i] - x0[i]) < e for i in range(n)):
+            return x1
+        x0 = x1[:]
+
+
+if __name__ == '__main__':
+    system = scipy.array([
+        [1., 2., 3., 3.],
+        [3., 5., 7., 0.],
+        [1., 3., 4., 1.],
+    ])
+    e = 1e-5
+    print(gauss_seidel(system, e))
+
+    m = [1., 2., 3.], [3., 5., 7.], [1., 3., 4.]
+    b = [3, 0, 1]
+    print(numpy.linalg.solve(m, b))
