@@ -14,9 +14,9 @@ def seidel(A, e):
         if all(abs(x1[i] - x0[i]) < e for i in range(n)):
             for i in range(n):
                 if x1[i] >= 0:
-                    x1[i] = round(abs(x1[i]))
+                   x1[i] = round(abs(x1[i]))
                 else:
-                    x1[i] = -round(abs(x1[i]))
+                   x1[i] = -round(abs(x1[i]))
             return x1
         x0 = x1[:]
 

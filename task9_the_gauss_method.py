@@ -48,7 +48,6 @@ def lu_decomposition(A):
     return L, U
 
 
-
 if __name__ == '__main__':
 
     system = scipy.array([
@@ -57,26 +56,35 @@ if __name__ == '__main__':
         [1., 3., 4., 1.],
     ])
 
-    P, L, U = scipy.linalg.lu(system)
+    system1 = scipy.array([
+        [1., 0., 1., 0., -1., 0.],
+        [0., 1., 0., -1., 1., 0.],
+        [0., 0., 2., 2., 6., 0.],
+        [1., 0., -2., 0., 0., 140.],
+        [0., -1., 0., -2., 0., -85.],
+
+    ])
+
+    P, L, U = scipy.linalg.lu(system1)
     print("\n|||||||||||||||||||||||| scipy.linalg.lu |||||||||||||||||||||||\nL:")
     pprint.pprint(L)
     print("U:")
     pprint.pprint(U)
     print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-    L, U = lu_decomposition(system)
+    L, U = lu_decomposition(system1)
     print("\n||||||||||||||||| custom lu_decomposition |||||||||||||||||||||||||\n=== custom L:")
     pprint.pprint(L)
     print("\n=== custom U:")
     pprint.pprint(U)
     print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
     print("\n-------------------- The Gauss Method -----------------------")
-    n = len(system)
+    n = len(system1)
     print("\noriginal matrix:")
-    pprint.pprint(system)
+    pprint.pprint(system1)
     print("\ntriangular matrix:")
-    system = gause_triangular_matrix(system)
-    pprint.pprint(system)
+    system1 = gause_triangular_matrix(system1)
+    pprint.pprint(system1)
     print("\nthe roots:")
-    det = gause_det_solve(system)
+    det = gause_det_solve(system1)
     for x in det: print(x)
     print("-------------------- end Gauss Method -----------------------")
