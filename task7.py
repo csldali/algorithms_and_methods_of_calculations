@@ -19,29 +19,27 @@ def create_the_matrix():
     return array
 
 
-def find_max_by_abs(lst):
+def find_by_abs(condition, lst):  # condition is max or min
     elements = set(lst)
     for elem in elements:
         lesser_elements_count = 0
-        for curr_elem in elements:
-            if abs(elem) > abs(curr_elem):
-                lesser_elements_count += 1
-        if lesser_elements_count == len(elements) - 1:
-            return elem
+        if condition == max:
+            for curr_elem in elements:
+                if abs(elem) > abs(curr_elem):
+                    lesser_elements_count += 1
+            if lesser_elements_count == len(elements) - 1:
+                return elem
+        elif condition == min:
+            for curr_elem in elements:
+                if abs(elem) < abs(curr_elem):
+                    lesser_elements_count += 1
+            if lesser_elements_count == len(elements) - 1:
+                return elem
+        else:
+            return print("Error in arguments of this function")
 
 
-def find_min_by_abs(lst):
-    elements = set(lst)
-    for elem in elements:
-        lesser_elements_count = 0
-        for curr_elem in elements:
-            if abs(elem) < abs(curr_elem):
-                lesser_elements_count += 1
-        if lesser_elements_count == len(elements) - 1:
-            return elem
-
-
-def inverse_iteration_min(A):
+def inverse_iteration_min(A, e):
     A_1 = numpy.linalg.inv(A)
     y0 = numpy.ones(len(A))
     y0_norm = math.sqrt(sum(y0))
@@ -57,19 +55,22 @@ def inverse_iteration_min(A):
         x_next = numpy.zeros(len(x_next))
         for i in range(len(x_next)):
             x_next[i] = y_next[i] / y_next_norm
-        if abs(lam1 - lam0) < 0.005 * abs(lam1):
+        if abs(lam1 - lam0) < e * abs(lam1):
             return round(1 / lam1)
         else:
             lam0 = lam1
 
 
-def inverse_iteration_max(A):
-    sigma = 3
-    A_sigma = A - sigma * numpy.eye(len(A))  # bug
+def inverse_iteration_max(A, e):
+    sigma = 15    # can be bigger the 13 - the biggest eigenvalue for current matrix (sigma >= 13)
+    A_sigma = A - sigma * numpy.eye(len(A))
     A_1 = numpy.linalg.inv(A_sigma)
     y0 = numpy.ones(len(A_sigma))
-    y0_norm = math.sqrt(sum(y0))
-    x0 = numpy.zeros(len(y0))
+    y0_norm = 0
+    for i in range(len(y0)):
+        y0_norm += y0[i] ** 2
+        y0_norm = math.sqrt(y0_norm)
+    x0 = numpy.ones(len(A_1))
     for i in range(len(y0)):
         x0[i] = y0[i] / y0_norm
     x_next = x0
@@ -77,17 +78,24 @@ def inverse_iteration_max(A):
     while True:
         y_next = numpy.dot(A_1, x_next)
         lam1 = numpy.dot(y_next, x_next)
-        y_next_norm = math.sqrt(sum(y_next))
+        y_next_norm = 0
+        for i in range(len(y_next)):
+            y_next_norm += y_next[i] ** 2
+        y_next_norm = math.sqrt(y_next_norm)
         x_next = numpy.zeros(len(x_next))
         for i in range(len(x_next)):
             x_next[i] = y_next[i] / y_next_norm
-        if abs(lam1 - lam0) < 0.005 * abs(lam1):
-            return round(1 / lam1) - sigma  # !!!
+        if abs(lam1 - lam0) < e * abs(lam1):
+            return round(1 / lam1) + sigma
         else:
             lam0 = lam1
 
 
 def power_iteration(A, e):
+    def eigenvalue(A, v):
+        Av = A.dot(v)
+        return v.dot(Av)
+
     n, d = A.shape
     v = numpy.ones(d) / numpy.sqrt(d)
     ev = eigenvalue(A, v)
@@ -103,11 +111,6 @@ def power_iteration(A, e):
     return ev_new  # , v_new
 
 
-def eigenvalue(A, v):
-    Av = A.dot(v)
-    return v.dot(Av)
-
-
 if __name__ == '__main__':
     array = create_the_matrix()
     pprint.pprint(array)
@@ -119,11 +122,10 @@ if __name__ == '__main__':
     max_ev = power_iteration(array, e)
     print("custom method - power_iteration(array, e):\t", max_ev)
 
-    print(
-        "\n||||||||||||||||||||||||||||||||||||||||||||||\n2)\nMax and min value with Inverse iteration method:\n\nMax:")
+    print("\n\n\n2)\nMax and min value with Inverse iteration method:\n\nMax:")
 
-    print("numpy.linalg.eig(array):\t", max_ev)
-    print("custom method - inverse_iteration_max(array, e):\t", inverse_iteration_max(array))
+    print("numpy.linalg.eig(array):\t", round(max_ev))
+    print("custom method - inverse_iteration_max(array, e):\t", inverse_iteration_max(array, e))
 
-    print("\nMin:\nnumpy.linalg.eig(array):\t", find_min_by_abs(a))
-    print("custom method - inverse_iteration_min(array, e):\t", inverse_iteration_min(array))
+    print("\nMin:\nnumpy.linalg.eig(array):\t", find_by_abs(min, a))
+    print("custom method - inverse_iteration_min(array, e):\t", inverse_iteration_min(array, e))
